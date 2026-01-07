@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Idjits | Studio</title>
+
     <style>
         body {
-            background-color: #050505; /* Almost Black */
+            background-color: #050505;
             color: #ffffff;
             font-family: 'Courier New', Courier, monospace;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh; /* Changed to min-height for safety */
             margin: 0;
             text-align: center;
         }
@@ -23,6 +24,7 @@
             padding: 40px;
             box-shadow: 10px 10px 0px #333;
             max-width: 90%;
+            box-sizing: border-box;
         }
 
         pre {
@@ -31,25 +33,35 @@
             white-space: pre;
             overflow: hidden;
             font-weight: bold;
+            margin: 0 auto;
         }
 
-        h1 {
-            font-size: 3rem;
-            margin: 20px 0 10px 0;
-            text-transform: uppercase;
-            letter-spacing: 5px;
+        /* New styles for the split text */
+        .text-group {
+            margin: 30px 0;
         }
-
-        p {
+        
+        .main-text {
             font-size: 1.2rem;
+            color: #ffffff;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .sub-text {
+            font-size: 0.8rem; /* Smaller font as requested */
             color: #888;
-            margin-bottom: 30px;
+            display: block;
         }
 
         .link-box {
-            margin-top: 50px;
+            margin-top: 40px;
             border-top: 1px dashed #444;
             padding-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         a {
@@ -58,6 +70,7 @@
             margin: 0 15px;
             font-weight: bold;
             transition: 0.3s;
+            display: inline-block;
         }
 
         a:hover {
@@ -69,6 +82,30 @@
             font-size: 2rem;
             margin: 20px 0;
             display: block;
+        }
+
+        /* --- MOBILE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            .logo-container {
+                padding: 20px 10px;
+                width: 95%; 
+            }
+
+            pre {
+                /* Lowered to 1.3vw to ensure the 's' fits */
+                font-size: 1.3vw; 
+                line-height: 1.3vw;
+            }
+
+            .link-box {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            a {
+                margin: 5px 0;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -97,8 +134,10 @@
 (      (_____|  |_____\       /__|      /__(      )___)     (___
         </pre>
 
-
-        <p>We aren't Ready(and neither are you)</p>
+        <div class="text-group">
+            <span class="main-text">We aren't Ready</span>
+            <span class="sub-text">(and neither are you)</span>
+        </div>
 
         <span class="shrug">¯\_(ツ)_/¯</span>
 
@@ -109,5 +148,4 @@
     </div>
 
 </body>
-
 </html>
