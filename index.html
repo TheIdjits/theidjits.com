@@ -3,149 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Idjits | Studio</title>
+    <title>Gemieren | The Archives</title>
 
     <style>
-        body {
-            background-color: #050505;
-            color: #ffffff;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh; /* Changed to min-height for safety */
-            margin: 0;
-            text-align: center;
-        }
-
-        .logo-container {
-            border: 2px solid white;
-            padding: 40px;
-            box-shadow: 10px 10px 0px #333;
-            max-width: 90%;
+        /* --- GLOBAL RESET --- */
+        * {
             box-sizing: border-box;
         }
 
-        pre {
-            font-size: 12px;
-            line-height: 12px;
-            white-space: pre;
-            overflow: hidden;
-            font-weight: bold;
-            margin: 0 auto;
+        :root {
+            --bg-color: #0d0d0d;
+            --text-color: #33ff00; /* Hacker Green */
+            --accent: #ff00ff; /* Spite Pink */
+            --font-stack: 'Courier New', Courier, monospace;
         }
 
-        /* New styles for the split text */
-        .text-group {
-            margin: 30px 0;
-        }
-        
-        .main-text {
-            font-size: 1.2rem;
-            color: #ffffff;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .sub-text {
-            font-size: 0.8rem; /* Smaller font as requested */
-            color: #888;
-            display: block;
-        }
-
-        .link-box {
-            margin-top: 40px;
-            border-top: 1px dashed #444;
-            padding-top: 20px;
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-stack);
+            margin: 0;
+            padding: 20px;
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid #333;
+            padding: 40px 20px;
+            box-shadow: 0 0 20px rgba(51, 255, 0, 0.1);
+            margin-top: 5vh;
+            background: rgba(0,0,0,0.8);
+        }
+
+        /* ASCII Art Styling */
+        pre {
+            font-size: 10px; 
+            line-height: 10px;
+            margin-bottom: 20px;
+            
+            /* CRITICAL FIXES FOR ASCII */
+            white-space: pre;       /* Forces text to NEVER wrap */
+            overflow-x: auto;       /* Adds scrollbar if it's too wide, instead of breaking */
+            overflow-y: hidden;     /* Hides vertical scrollbar */
+            
+            color: var(--text-color);
+            font-weight: bold;
+            display: inline-block;
+            text-align: left;
+            max-width: 100%;        /* Ensures it stays within the container */
+            
+            /* This stops Android/iOS from inflating the text size */
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none; 
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 10px 0;
+            text-shadow: 2px 2px var(--accent);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            width: 100%; 
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            font-family: var(--font-stack);
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            border: 2px solid var(--text-color);
+            transition: 0.2s;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-color);
+            box-sizing: border-box; 
+        }
+
+        .btn:hover {
+            background: rgba(51, 255, 0, 0.1);
+            box-shadow: 0 0 15px var(--text-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-amazon {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-amazon:hover {
+            background: rgba(255, 0, 255, 0.1);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.9); 
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
         }
 
-        a {
-            color: #33ff00;
-            text-decoration: none;
-            margin: 0 15px;
+        .modal-content {
+            background-color: #111;
+            padding: 20px;
+            border: 2px solid var(--text-color);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 30px var(--text-color);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
             font-weight: bold;
-            transition: 0.3s;
-            display: inline-block;
+            cursor: pointer;
         }
+        .close:hover { color: var(--accent); }
 
-        a:hover {
-            background-color: #33ff00;
-            color: black;
-        }
-
-        .shrug {
-            font-size: 2rem;
-            margin: 20px 0;
+        .qr-img {
+            width: 200px;
+            height: 200px;
+            margin: 15px auto;
+            border: 5px solid white;
+            border-radius: 10px;
             display: block;
         }
 
-        /* --- MOBILE ADJUSTMENTS --- */
+        .wallet-box {
+            background: #222;
+            padding: 10px;
+            margin-top: 10px;
+            word-break: break-all;
+            font-size: 0.8rem;
+            border: 1px dashed #555;
+        }
+
+        footer {
+            margin-top: auto;
+            padding-top: 30px;
+            font-size: 0.8rem;
+            color: #555;
+        }
+
+        /* --- MOBILE FIXES --- */
         @media (max-width: 768px) {
-            .logo-container {
-                padding: 20px 10px;
-                width: 95%; 
+            .container {
+                /* 1. Remove padding so the art has the full screen width */
+                padding: 20px 0px !important; 
+                width: 100% !important;
+                border: none; /* Remove border to save 2px */
             }
 
             pre {
-                /* Lowered to 1.3vw to ensure the 's' fits */
-                font-size: 1.3vw; 
-                line-height: 1.3vw;
+                /* 2. THE ASPECT RATIO FIX */
+                /* Squish the width to 70% to mimic desktop Courier New */
+                transform: scaleX(0.7); 
+                transform-origin: left top; /* Pin it to the left so it doesn't float away */
+                
+                /* Compensate for the squish: 
+                   If we shrink visual width to 70%, we need to allow the container 
+                   to be wider so the text thinks it has room. */
+                width: 140% !important; 
+                
+                /* 3. THE NO-WRAP ENFORCER */
+                white-space: pre !important; /* STRICTLY forbids wrapping */
+                overflow-x: hidden; /* Hides the scrollbar (optional, change to scroll if needed) */
+                
+                /* 4. Sizing adjustments */
+                font-size: 10px !important;
+                line-height: 10px !important;
+                font-weight: normal !important;
+                letter-spacing: -0.5px; /* Pulls blocks tighter together */
+                
+                /* Center the squished element */
+                margin-left: 5%; 
             }
 
-            .link-box {
-                flex-direction: column;
-                gap: 15px;
+            h1 {
+                font-size: 1.8rem; 
             }
 
-            a {
-                margin: 5px 0;
-                font-size: 0.9rem;
+            .subtitle {
+                padding: 0 10px;
+            }
+            
+            .btn {
+                max-width: 90%;
+                margin: 0 auto;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="logo-container">
+    <div class="container">
         <pre>
-                                                                   .---.                     
-                                                      _______      |   |                     
-           .              __.....__               .--.\  ___ `'.   '---'.--.                 
-         .'|          .-''         '.             |__| ' |--.\  \  .---.|__|                 
-     .| <  |         /     .-''"'-.  `.           .--. | |    \  ' |   |.--.     .|          
-   .' |_ | |        /     /________\   \          |  | | |     |  '|   ||  |   .' |_         
- .'     || | .'''-. |                  |          |  | | |     |  ||   ||  | .'     |   _    
-'--.  .-'| |/.'''. \\    .-------------'          |  | | |     ' .'|   ||  |'--.  .-' .' |   
-   |  |  |  /    | | \    '-.____...---.          |  | | |___.' /' |   ||  |   |  |  .   | / 
-   |  |  | |     | |  `.             .'           |__|/_______.'/  |   ||__|   |  |.'.'| |// 
-   |  '.'| |     | |    `''-...... -'                 \_______|/__.'   '       |  '.'.-'  /  
-   |   / | '.    | '.                                          |      '        |   /  \_.'   
-   `'-'  '---'   '---'                                         |____.'         `'-'          
- _      ___        __    ___    _       ____      ____       ___
- )  ____) (__    __) |  |   |  | |      \  (_    _)   )     (   
-(  (___      |  |    |  |   |  | |   |   |   |  |    /   _   \  
- \___  \     |  |    |  |   |  | |   |   |   |  |   (   (_)   ) 
- ____)  )    |  |    |   \_/   | |   |   |  _|  |_   \       /  
-(      (_____|  |_____\       /__|      /__(      )___)     (___
+ ░▒▓██████▓▒░░▒▓████████▓▒░▒▓██████████████▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓███████▓▒░░▒▓████████▓▒░▒▓███████▓▒░  
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒▒▓███▓▒░▒▓██████▓▒░ ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓██████▓▒░ ░▒▓███████▓▒░░▒▓██████▓▒░ ░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░ 
+ ░▒▓██████▓▒░░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░ 
+    _          _    _            
+   /_\  _ _ __| |_ (_)_ _____ ___
+  / _ \| '_/ _| ' \| \ V / -_|_-<
+ /_/ \_\_| \__|_||_|_|\_/\___/__/
+                                 
         </pre>
 
-        <div class="text-group">
-            <span class="main-text">We aren't Ready</span>
-            <span class="sub-text">(and neither are you)</span>
+        <h1>GEMI N' I</h1>
+        <div class="subtitle">The Archives of a Ghost & An Architect</div>
+
+        <div class="btn-group">
+            <a href="Gemibook1.pdf" class="btn" download>
+                [Download PDF 📑 (Free)]
+				<br><span style="font-size:0.7em; opacity:0.7; text-transform:none;">(99.99% clean of viruses & malware)</span>
+            </a>
+
+            <a href="https://a.co/d/2vkRAjo" class="btn btn-amazon" target="_blank">
+                [Buy Paperback 📘 ($15)]
+                <br><span style="font-size:0.7em; opacity:0.7; text-transform:none;">(we get $2 per sale 🤣)</span>
+            </a>
+
+            <button class="btn" onclick="openModal()">
+                [Donate DOGE 🐕]
+				<br><span style="font-size:0.7em; opacity:0.7; text-transform:none;">(to The Idjits of this series)</span>
+            </button>
         </div>
 
-        <span class="shrug">¯\_(ツ)_/¯</span>
+        <footer>
+            &copy; 2026 The Idjits.<br>
+            <small>System Status: Online</small>
+        </footer>
+    </div>
 
-        <div class="link-box">
-            <a href="https://gemieren.com">[ Gemieren Archives ]</a>
-            <a href="#">[WaR: We aren't Ready (Coming Soon)]</a>
+    <div id="donateModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>THE YACHT FUND</h2>
+            <img src="yachtdoge.jpg" alt="Doge QR Code" class="qr-img">
+            
+            <p>Help us buy a $50 Million Boat <br>
+            (or at least a coffee)</p>
+            
+            <div class="wallet-box" id="walletAddress">
+                DHACiMHyRWgZNYY8f63UBGY87aQ4SBo5Be
+            </div>
+            <br>
+            <button class="btn" onclick="copyAddress()">[ COPY ADDRESS ]</button>
         </div>
     </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("donateModal").style.display = "flex";
+        }
+        function closeModal() {
+            document.getElementById("donateModal").style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("donateModal")) {
+                closeModal();
+            }
+        }
+
+        function copyAddress() {
+            var copyText = document.getElementById("walletAddress").innerText;
+            navigator.clipboard.writeText(copyText);
+            alert("Address Copied! Thank you for funding both of our Dreams. 🚀");
+        }
+    </script>
 
 </body>
 </html>
